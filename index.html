@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+ <meta charset="UTF-8">
+ <title></title>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+ <script type="text/javascript">
+  var io = io.connect('http://localhost:8080'); 
+
+  $(document).ready(function (){
+    io.emit('get_auctions', 'I WANT MY AUCTIONS!');
+
+    io.on('give_auctions', function(auctions){
+      for( i in auctions)
+      {
+         var row = "<form class='bid_form' action='#'>" +
+                "Name:<input type='text' name='name'>" +
+                "Bid:<input type='text' name='bid'>" +
+                "<input type='hidden' name='id' value='"+i+"'>" +
+                "<input type='submit' value='bid!'>" +
+              "</form>";
+        $('tbody').append("<tr><td>" + auctions[i].name + "</td><td>" + auctions[i].bid +"</td><td>"+ auctions[i].winner + "</td><td>"+row+"</td></tr>");
+      }
+    });
+
+    io.on('give_new_auctions', function(auctions){
+      alert('got herw');
+      $('tbody').html(''); //this just clears HTML
+      for( i in auctions)
+      {
+         var row = "<form  class='bid_form' action='#'>" +
+                "Name:<input type='text' name='name'>" +
+                "Bid:<input type='text' name='bid'>" +
+                "<input type='hidden' name='id' value='"+i+"'>" +
+                "<input type='submit' value='bid!'>" +
+              "</form>";
+        $('tbody').append("<tr><td>" + auctions[i].name + "</td><td>" + auctions[i].bid +"</td><td>"+ auctions[i].winner +"</td><td>"+row+"</td></tr>");
+      }
+    });
+     io.on('error-message', function (data){
+     alert("you didn't bid enough")
+    });
+    //trigger send message event 
+  
+    $('#new').click(function(){
+         var name = $('#item_name').val();
+         var price = $('#price').val();
+         var auction = {name: name, price: price};
+         io.emit('add_new', auction);
+     });
+
+    $(document).on('submit', '.bid_form', function(){
+      var a = $(this).serializeArray();
+      var update = {id: a[2].value , name: a[0].value, bid: a[1].value};
+      console.log(update);
+      io.emit('update_auction', update);
+      return false;
+    })
+   });
+ </script>
+</head>
+<body>
+  <div>
+    <h3>ADD A NEW AUCTION!</h3>
+    Item name: <input type='text' id='item_name'>
+    Price: <input type='text' id='price'>
+    <button id='new'>NEW BID </button>
+  </div>
+    <table>
+      <thead>
+        <th>Item</th>
+        <th>Current Bid</th>
+        <th>Current Winner</th>
+        <th>Action!</th>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+</body>
+</html>
