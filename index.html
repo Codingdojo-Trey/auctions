@@ -14,10 +14,11 @@
     io.on('give_auctions', function(auctions){
       for( i in auctions)
       {
+        console.log(i)
          var row = "<form class='bid_form' action='#'>" +
                 "Name:<input type='text' name='name'>" +
                 "Bid:<input type='text' name='bid'>" +
-                "<input type='hidden' name='id' value='"+i+"'>" +
+                "<input type='hidden' name='id' value='"+auctions[i].id+"'>" +
                 "<input type='submit' value='bid!'>" +
               "</form>";
         $('tbody').append("<tr><td>" + auctions[i].name + "</td><td>" + auctions[i].bid +"</td><td>"+ auctions[i].winner + "</td><td>"+row+"</td></tr>");
@@ -32,7 +33,7 @@
          var row = "<form  class='bid_form' action='#'>" +
                 "Name:<input type='text' name='name'>" +
                 "Bid:<input type='text' name='bid'>" +
-                "<input type='hidden' name='id' value='"+i+"'>" +
+                "<input type='hidden' name='id' value='"+auctions[i].id+"'>" +
                 "<input type='submit' value='bid!'>" +
               "</form>";
         $('tbody').append("<tr><td>" + auctions[i].name + "</td><td>" + auctions[i].bid +"</td><td>"+ auctions[i].winner +"</td><td>"+row+"</td></tr>");

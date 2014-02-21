@@ -29,7 +29,7 @@ function Auction(item_name, bid_amt){
     this.bid = bid_amt;
     this.winner = 'BE THE FIRST TO BID';
     this.update = function(name, amt){
-      this.bid = amt;
+      this.bid =   amt;
       this.winner = name;
     };
 }
@@ -57,12 +57,11 @@ sockets.on('connection', function (socket){
   //give new auction to everyone!//
   socket.emit('give_auctions', [new_auction]);
   socket.broadcast.emit('give_auctions', [new_auction]); 
-  console.log(auctions);
  });
 
  socket.on('update_auction', function (auction){
   console.log('##############################bid up in dis biach!')
-  console.log(auction);
+  console.log('########counter', counter);
   var id = auction.id;
   auctions[id].update(auction.name, auction.bid);
   socket.emit('give_new_auctions', auctions);
